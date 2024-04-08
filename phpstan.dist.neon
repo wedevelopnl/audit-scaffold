@@ -1,0 +1,13 @@
+parameters:
+    level: 'max'
+    paths: [ 'src' ]
+    checkFunctionNameCase: true
+    checkGenericClassInNonGenericObjectType: true
+    reportUnmatchedIgnoredErrors: true
+    treatPhpDocTypesAsCertain: false
+    parallel:
+        maximumNumberOfProcesses: 4
+
+includes:
+    - 'vendor/phpstan/phpstan-deprecation-rules/rules.neon'
+    - 'vendor/phpstan/phpstan/conf/bleedingEdge.neon'

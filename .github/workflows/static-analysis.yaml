@@ -1,0 +1,42 @@
+name: "Static Analysis"
+
+on:
+    pull_request:
+        branches:
+            - 'main'
+    push:
+        branches:
+            - 'main'
+
+jobs:
+
+    syntax-linting:
+        runs-on: 'ubuntu-20.04'
+        strategy:
+            matrix:
+                php:
+                    - '8.2'
+                    - '8.3'
+        steps:
+            - uses: 'actions/checkout@v2'
+            - uses: 'shivammathur/setup-php@v2'
+              with:
+                  php-version: '${{ matrix.php }}'
+            - run: 'find src/ -type f -name "*.php" -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )'
+
+    phpstan:
+        runs-on: 'ubuntu-22.04'
+        strategy:
+            matrix:
+                php:
+                    - '8.2'
+                    - '8.3'
+        steps:
+            - uses: 'actions/checkout@v2'
+            - uses: 'shivammathur/setup-php@v2'
+              with:
+                  php-version: '${{ matrix.php }}'
+            - uses: 'ramsey/composer-install@v2'
+              with:
+                  dependency-versions: 'highest'
+            - run: './vendor/bin/phpstan analyze --no-progress --error-format="github"'
