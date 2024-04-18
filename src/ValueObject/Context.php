@@ -2,7 +2,10 @@
 
 namespace WeDevelop\Audit\ValueObject;
 
+use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Translation\TranslatableInterface;
@@ -87,6 +90,52 @@ readonly class Context implements TranslatableInterface
                 AuditSource::class,
                 static::class,
             ),
+        );
+    }
+
+    /**
+     * Sometimes, when using Mongo ODM or the token is unserialized from session
+     * storage, the token's user objects are detached from Doctrine's Unit of
+     * Work. Replace the objects that reference the original data in the database,
+     * without making a database call to fetch them. They'll act as proxy objects
+     * that will load as soon as you access any of their properties.
+     */
+    public function refDb(DocumentManager|EntityManagerInterface $manager): self
+    {
+        $getReference = function (?object $document) use ($manager): ?object {
+            if (null === $document || $manager->contains($document)) {
+                return $document;
+            }
+            $metadata = $manager->getClassMetadata(get_class($document));
+            $identifier = $manager instanceof EntityManagerInterface
+                ? $metadata->getIdentifierValues($document)
+                // @phpstan-ignore-next-line method.notFound (getIdentifierValues really does exist)
+                : $metadata->getIdentifierValue($document);
+            return $manager->getReference($metadata->getName(), $identifier);
+        };
+
+        /** @var array{user: ?UserInterface, impersonatedBy: ?UserInterface} $tokens */
+        $tokens = array_map(fn (?UserInterface $user): ?object => $getReference($user), [
+            'user' => $this->token?->getUser(),
+            'impersonatedBy' => $this->token instanceof SwitchUserToken
+                ? $this->token->getOriginalToken()->getUser()
+                : null,
+        ]);
+
+        // Modifying readonly properties on clone isn't supported until
+        // PHP 8.3, construct new object.
+        return new self(
+            $this->source,
+            self::constructToken(
+                $tokens['user'],
+                $tokens['impersonatedBy'],
+                // TokenInterface::getFirewallName() does not exist, but does
+                // on the concrete implementations we extend.
+                $this->token !== null && method_exists($this->token, 'getFirewallName')
+                    ? $this->token->getFirewallName()
+                    : null,
+            ),
+            $this->ip,
         );
     }
 }
