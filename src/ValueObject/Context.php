@@ -31,12 +31,16 @@ readonly class Context implements TranslatableInterface
         );
     }
 
-    private static function constructToken(?UserInterface $user, ?UserInterface $impersonatedBy): ?TokenInterface
+    private static function constructToken(
+        ?UserInterface $user,
+        ?UserInterface $impersonatedBy,
+        ?string $firewallName = null,
+    ): ?TokenInterface
     {
         if (null !== $user && null !== $impersonatedBy) {
-            return new AuditImpersonationToken($user, new AuditToken($impersonatedBy));
+            return new AuditImpersonationToken($user, new AuditToken($impersonatedBy), $firewallName);
         } elseif (null !== $user) {
-            return new AuditToken($user);
+            return new AuditToken($user, $firewallName);
         }
         return null;
     }
