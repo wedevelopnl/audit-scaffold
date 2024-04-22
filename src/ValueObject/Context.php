@@ -61,12 +61,12 @@ readonly class Context implements TranslatableInterface
         return new self(AuditSource::CONSOLE, null, null);
     }
 
-    public static function ui(Request $request, TokenInterface $token): self
+    public static function ui(Request $request, ?TokenInterface $token): self
     {
         return new self(AuditSource::UI, $token, IpAddress::fromRequest($request));
     }
 
-    public static function api(Request $request, TokenInterface $token): self
+    public static function api(Request $request, ?TokenInterface $token): self
     {
         return new self(AuditSource::API, $token, IpAddress::fromRequest($request));
     }
