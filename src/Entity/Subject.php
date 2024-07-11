@@ -11,6 +11,7 @@ use WeDevelop\Audit\Util\SubjectHelper;
 #[ODM\EmbeddedDocument]
 readonly class Subject
 {
+    /** @var class-string */
     #[ODM\Field(type: MongoType::STRING)]
     public string $class;
 
