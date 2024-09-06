@@ -19,7 +19,7 @@ use WeDevelop\Audit\Util\TranslationHelper;
 
 readonly class Context implements TranslatableInterface
 {
-    private function __construct(
+    public function __construct(
         public AuditSource $source,
         public ?TokenInterface $token = null,
         public ?IpAddress $ip = null,
