@@ -2,7 +2,7 @@
 
 namespace WeDevelop\Audit\Entity;
 
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 use Doctrine\ODM\MongoDB\Types\Type as MongoType;
 use WeDevelop\Audit\Exception\IdentifierStringConversionException;
 use WeDevelop\Audit\Exception\SubjectNotConcreteException;

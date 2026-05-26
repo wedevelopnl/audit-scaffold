@@ -3,7 +3,7 @@
 namespace WeDevelop\Audit\Entity;
 
 use Doctrine\DBAL\Types\Types as DbType;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 use Doctrine\ODM\MongoDB\Types\Type as MongoType;
 use Doctrine\ORM\Mapping as ORM;
 use WeDevelop\Audit\AuditLogInterface;

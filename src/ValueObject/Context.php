@@ -131,8 +131,10 @@ readonly class Context implements TranslatableInterface
                 $tokens['impersonatedBy'],
                 // TokenInterface::getFirewallName() does not exist, but does
                 // on the concrete implementations we extend.
-                $this->token !== null && method_exists($this->token, 'getFirewallName')
-                    ? $this->token->getFirewallName()
+                $this->token !== null
+                && method_exists($this->token, 'getFirewallName')
+                && is_string($firewallName = $this->token->getFirewallName())
+                    ? $firewallName
                     : null,
             ),
             $this->ip,
