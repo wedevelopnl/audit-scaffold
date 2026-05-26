@@ -23,7 +23,7 @@ Audit logs answer a simple question: who did what, to what, when and where?
 
 #### Requirements
 
-- Symfony 7
+- Symfony 7 (PHP 8.2+), or Symfony 8 (PHP 8.4+)
 - Doctrine persistence layer: either [ORM][orm]
   or [Mongo ODM][mongo-odm].
 
