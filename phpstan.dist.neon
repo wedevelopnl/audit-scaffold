@@ -2,11 +2,15 @@ parameters:
     level: 'max'
     paths: [ 'src' ]
     checkFunctionNameCase: true
-    checkGenericClassInNonGenericObjectType: true
     reportUnmatchedIgnoredErrors: true
     treatPhpDocTypesAsCertain: false
     parallel:
         maximumNumberOfProcesses: 4
+    ignoreErrors:
+        -
+            identifier: 'new.staticInAbstractClassStaticMethod'
+            path: 'src/AbstractAuditLog.php'
+            reportUnmatched: false
 
 includes:
     - 'vendor/phpstan/phpstan-deprecation-rules/rules.neon'

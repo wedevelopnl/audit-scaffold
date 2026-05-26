@@ -2,7 +2,7 @@
 
 namespace WeDevelop\Audit\Util;
 
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\Proxy;

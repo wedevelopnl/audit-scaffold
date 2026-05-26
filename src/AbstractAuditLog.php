@@ -34,6 +34,14 @@ abstract readonly class AbstractAuditLog implements AuditLogInterface, RenderAud
 
     public static function fromEntity(AuditEntityInterface $entity): AuditLogInterface
     {
+        if ((new \ReflectionClass(static::class))->isAbstract()) {
+            throw new \LogicException(sprintf(
+                'Cannot reconstruct Audit Log from entity using abstract class "%s";'
+                . ' call fromEntity() on a concrete implementation instead',
+                static::class,
+            ));
+        }
+
         return new static(
             Context::fromEntity($entity),
             $entity->getSubject(),
