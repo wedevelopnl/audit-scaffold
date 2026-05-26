@@ -38,8 +38,7 @@ readonly class Context implements TranslatableInterface
         ?UserInterface $user,
         ?UserInterface $impersonatedBy,
         ?string $firewallName = null,
-    ): ?TokenInterface
-    {
+    ): ?TokenInterface {
         if (null !== $user && null !== $impersonatedBy) {
             return new AuditImpersonationToken($user, new AuditToken($impersonatedBy), $firewallName);
         } elseif (null !== $user) {
@@ -102,7 +101,7 @@ readonly class Context implements TranslatableInterface
      */
     public function refDb(DocumentManager|EntityManagerInterface $manager): self
     {
-        $getReference = function (?object $document) use ($manager): ?object {
+        $getReference = static function (?object $document) use ($manager): ?object {
             if (null === $document || $manager->contains($document)) {
                 return $document;
             }
@@ -115,7 +114,7 @@ readonly class Context implements TranslatableInterface
         };
 
         /** @var array{user: ?UserInterface, impersonatedBy: ?UserInterface} $tokens */
-        $tokens = array_map(fn (?UserInterface $user): ?object => $getReference($user), [
+        $tokens = array_map(static fn (?UserInterface $user): ?object => $getReference($user), [
             'user' => $this->token?->getUser(),
             'impersonatedBy' => $this->token instanceof SwitchUserToken
                 ? $this->token->getOriginalToken()->getUser()
@@ -131,7 +130,7 @@ readonly class Context implements TranslatableInterface
                 $tokens['impersonatedBy'],
                 // TokenInterface::getFirewallName() does not exist, but does
                 // on the concrete implementations we extend.
-                $this->token !== null
+                null !== $this->token
                 && method_exists($this->token, 'getFirewallName')
                 && is_string($firewallName = $this->token->getFirewallName())
                     ? $firewallName
