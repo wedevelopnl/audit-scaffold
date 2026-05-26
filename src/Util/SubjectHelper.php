@@ -12,7 +12,6 @@ use WeDevelop\Audit\Exception\SubjectNotConcreteException;
 class SubjectHelper
 {
     public const JSON_OPTIONS = \JSON_UNESCAPED_SLASHES | \JSON_PRESERVE_ZERO_FRACTION;
-
     private static ?ManagerRegistry $registry = null;
 
     public static function setManagerRegistry(ManagerRegistry $registry): void
