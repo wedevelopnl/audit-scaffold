@@ -14,6 +14,11 @@
             "WeDevelop\\Audit\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "WeDevelop\\Audit\\Tests\\": "tests/"
+        }
+    },
     "prefer-stable": true,
     "require": {
         "php": ">=8.2",

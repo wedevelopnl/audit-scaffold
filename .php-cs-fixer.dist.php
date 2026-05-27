@@ -5,6 +5,7 @@ $finder = (new PhpCsFixer\Finder())
     ->name('*.php')
     ->in([
         __DIR__ . '/src',
+        __DIR__ . '/tests',
     ])
     ->ignoreVCS(true);
 
