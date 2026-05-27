@@ -14,6 +14,11 @@
             "WeDevelop\\Audit\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "WeDevelop\\Audit\\Tests\\": "tests/"
+        }
+    },
     "prefer-stable": true,
     "require": {
         "php": ">=8.2",
@@ -27,7 +32,9 @@
         "doctrine/mongodb-odm": "^2.16",
         "friendsofphp/php-cs-fixer": "^3.95",
         "phpstan/phpstan": "^2.1",
-        "phpstan/phpstan-deprecation-rules": "^2.0"
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "phpunit/phpunit": "^11.5",
+        "symfony/cache": "^7.0 || ^8.0"
     },
     "suggest": {
         "doctrine/orm": "To store audit logs as entities in a relational database",
@@ -38,5 +45,13 @@
         "preferred-install": {
             "*": "dist"
         }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "coverage": [
+            "@putenv XDEBUG_MODE=coverage",
+            "phpunit --coverage-clover coverage.xml",
+            "@php tools/coverage-gate.php coverage.xml 95"
+        ]
     }
 }
