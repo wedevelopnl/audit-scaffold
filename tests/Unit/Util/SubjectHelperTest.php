@@ -69,6 +69,15 @@ final class SubjectHelperTest extends TestCase
         self::assertSame(PropertyIdObject::class, SubjectHelper::getSubjectClass(new PropertyIdObject()));
     }
 
+    public function testGetDoctrinePropertiesReturnsNullWhenTheRegistryFails(): void
+    {
+        $registry = $this->createMock(ManagerRegistry::class);
+        $registry->method('getManagerForClass')->willThrowException(new \RuntimeException('registry down'));
+        SubjectHelper::setManagerRegistry($registry);
+
+        self::assertNull(SubjectHelper::getDoctrineProperties(new IntegrationEntity(5)));
+    }
+
     #[DataProvider('objectIdentifierCases')]
     public function testGetObjectIdentifier(mixed $expected, object $subject): void
     {

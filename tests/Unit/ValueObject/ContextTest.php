@@ -15,19 +15,24 @@ use WeDevelop\Audit\ValueObject\Context;
 
 final class ContextTest extends TestCase
 {
+    /** @param \Closure(): Context $factory */
     #[DataProvider('tokenlessFactories')]
-    public function testTokenlessFactoriesHaveNoTokenOrIp(AuditSource $expectedSource, Context $context): void
+    public function testTokenlessFactoriesHaveNoTokenOrIp(AuditSource $expectedSource, \Closure $factory): void
     {
+        // Invoke the factory in the test body (not the provider) so it is counted
+        // as covered — data providers run outside coverage measurement.
+        $context = $factory();
+
         self::assertSame($expectedSource, $context->source);
         self::assertNull($context->token);
         self::assertNull($context->ip);
     }
 
-    /** @return iterable<string, array{AuditSource, Context}> */
+    /** @return iterable<string, array{AuditSource, \Closure(): Context}> */
     public static function tokenlessFactories(): iterable
     {
-        yield 'console' => [AuditSource::CONSOLE, Context::console()];
-        yield 'job' => [AuditSource::JOB, Context::job()];
+        yield 'console' => [AuditSource::CONSOLE, static fn (): Context => Context::console()];
+        yield 'job' => [AuditSource::JOB, static fn (): Context => Context::job()];
     }
 
     /** @param \Closure(Request, AuditToken): Context $factory */
