@@ -61,3 +61,10 @@ jobs:
                   composer-options: '--ignore-platform-req=ext-mongodb'
             - run: './vendor/bin/phpunit --coverage-clover coverage.xml'
             - run: 'php tools/coverage-gate.php coverage.xml 95'
+            - if: always()
+              uses: 'actions/upload-artifact@v4'
+              with:
+                  # always() so the report is available even when the gate
+                  # fails the job, which is when inspecting coverage matters.
+                  name: 'coverage-clover'
+                  path: 'coverage.xml'
