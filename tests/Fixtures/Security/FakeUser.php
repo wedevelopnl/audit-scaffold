@@ -25,4 +25,7 @@ class FakeUser implements UserInterface
     {
         return $this->identifier;
     }
+
+    // Required by Symfony 7's UserInterface; removed from the interface in Symfony 8.
+    public function eraseCredentials(): void {}
 }

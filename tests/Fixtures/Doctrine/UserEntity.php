@@ -40,4 +40,7 @@ class UserEntity implements UserInterface
     {
         return $this->username;
     }
+
+    // Required by Symfony 7's UserInterface; removed from the interface in Symfony 8.
+    public function eraseCredentials(): void {}
 }
