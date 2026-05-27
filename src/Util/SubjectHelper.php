@@ -115,7 +115,6 @@ class SubjectHelper
         if (1 === count($idProperties)) {
             $property = $idProperties[array_key_first($idProperties)];
             if ($property->isInitialized($subject)) {
-                $property->setAccessible(true);
                 return $property->getValue($subject);
             }
         } elseif (1 < count($idProperties)) {
@@ -126,10 +125,7 @@ class SubjectHelper
                 ksort($idProperties);
                 return array_combine(
                     array_map(static fn (\ReflectionProperty $property): string => $property->getName(), $idProperties),
-                    array_map(static function (\ReflectionProperty $property) use ($subject): mixed {
-                        $property->setAccessible(true);
-                        return $property->getValue($subject);
-                    }, $idProperties),
+                    array_map(static fn (\ReflectionProperty $property): mixed => $property->getValue($subject), $idProperties),
                 );
             }
         }
@@ -142,7 +138,6 @@ class SubjectHelper
         if ($reflection->hasProperty('id')) {
             $property = $reflection->getProperty('id');
             if ($property->isInitialized($subject)) {
-                $property->setAccessible(true);
                 return $property->getValue($subject);
             }
         }
@@ -157,7 +152,6 @@ class SubjectHelper
             if ($method->getNumberOfRequiredParameters() > 0) {
                 return null;
             }
-            $method->setAccessible(true);
             return $method->invoke($subject);
         }
         return null;
