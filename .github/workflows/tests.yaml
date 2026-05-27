@@ -36,7 +36,15 @@ jobs:
                   # MongoDB/ODM is out of scope; the suite never instantiates Mongo
                   # objects, so the test pipeline must not depend on ext-mongodb.
                   composer-options: '--ignore-platform-req=ext-mongodb'
-            - run: './vendor/bin/phpunit'
+            - run: './vendor/bin/phpunit --log-junit junit.xml'
+            - if: always()
+              uses: 'actions/upload-artifact@v4'
+              with:
+                  # Matrix jobs share a run, so artifact names must be unique
+                  # (upload-artifact@v4 rejects duplicates); always() keeps the
+                  # results from failing combinations, which are the useful ones.
+                  name: 'junit-php${{ matrix.php }}-${{ matrix.dependency-versions }}'
+                  path: 'junit.xml'
 
     coverage:
         runs-on: 'ubuntu-24.04'
